@@ -12,8 +12,6 @@ import MobileNav from "@/components/MobileNav";
 import Stage from "@/components/Stage";
 import { LangProvider } from "@/components/LangProvider";
 import { getLang } from "@/lib/lang";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 
 const lato = Lato({ subsets: ["latin", "latin-ext"], weight: ["400", "700"], variable: "--font-lato", display: "swap" });
 const serif = Noto_Serif({ subsets: ["latin", "latin-ext", "vietnamese"], variable: "--font-serif", display: "swap" });
@@ -29,8 +27,8 @@ export const viewport: Viewport = { themeColor: "#120b09", width: "device-width"
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const lang = await getLang();
-  const d = join(process.cwd(), "public", "logo3d");
-  const logo3d = { webm: existsSync(join(d, "logo3d.webm")), mp4: existsSync(join(d, "logo3d.mp4")), poster: existsSync(join(d, "poster.png")) };
+  // Dateien liegen im Repo (public/logo3d); auf Vercel ist existsSync zur Laufzeit unzuverlässig
+  const logo3d = { webm: true, mp4: false, poster: true };
   return (
     <html lang={lang} className={`${lato.variable} ${serif.variable} ${sans.variable} ${times.variable}`}>
       <body>
