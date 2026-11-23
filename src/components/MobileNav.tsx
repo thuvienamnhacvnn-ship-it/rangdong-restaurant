@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLang } from "@/components/LangProvider";
+import { SITE } from "@/lib/site";
 
 const I = (d: string[]) => (
   <svg className="mnic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -20,6 +21,7 @@ const IC = {
   ambience: I(["M3 9l1.5-5h15L21 9", "M4 9a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0", "M5 12v8h14v-8", "M10 20v-5h4v5"]),
   contact: I(["M5 3.5h3.5L10 8 8 9.5a11 11 0 0 0 6.5 6.5L16 14l4.5 1.5V19a2 2 0 0 1-2 2A16 16 0 0 1 3 5.5a2 2 0 0 1 2-2z"]),
   guide: I(["M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z", "M4 5.5V21.5", "M9 8h7"]),
+  order: I(["M5 8h14l-1.2 11.2a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3z", "M9 8V6.5a3 3 0 0 1 6 0V8", "M9.5 13.5h5"]),
   party: I(["M3 18.5h18", "M5 18.5a7 7 0 0 1 14 0", "M12 11.5V9", "M12 7.2a1 1 0 1 0 0 .01"]),
 };
 
@@ -35,11 +37,11 @@ export default function MobileNav() {
   const tabs: { k: keyof typeof IC; href: string; label: string; on: boolean }[] = [
     { k: "home", href: "/", label: t.nav.home, on: path === "/" && mode !== "video" },
     { k: "menu", href: "/speisekarte", label: t.nav.menu, on: path === "/speisekarte" || path === "/food-guide" },
-    { k: "video", href: "/video", label: t.nav.video, on: path === "/video" || (path === "/" && mode === "video") },
     { k: "booking", href: "/reservierung", label: t.nav.booking, on: path === "/reservierung" },
   ];
-  const moreOn = ["/signature", "/events", "/party-technik", "/ambiente", "/kontakt", "/food-guide", "/impressum", "/datenschutz"].includes(path) && path !== "/food-guide";
+  const moreOn = ["/video", "/signature", "/events", "/party-technik", "/ambiente", "/kontakt", "/food-guide", "/impressum", "/datenschutz"].includes(path) && path !== "/food-guide";
   const items: { k: keyof typeof IC; href: string; label: string }[] = [
+    { k: "video", href: "/video", label: t.nav.video },
     { k: "signature", href: "/signature", label: t.nav.signature },
     { k: "events", href: "/events", label: t.nav.events },
     { k: "ambience", href: "/ambiente", label: t.nav.ambience },
@@ -68,7 +70,13 @@ export default function MobileNav() {
         </div>
       </div>
       <nav className="mnav" aria-label={vi ? "Điều hướng chính" : "Hauptnavigation"}>
-        {tabs.map((x) => (
+        {tabs.slice(0, 2).map((x) => (
+          <Link key={x.k} href={x.href} className={x.on ? "on" : ""} aria-current={x.on ? "page" : undefined}>{IC[x.k]}<span>{x.label}</span></Link>
+        ))}
+        <a className="mnav-fab" href={`tel:${SITE.phoneTel}`} aria-label={vi ? "Đặt món ngay – gọi nhà hàng" : "Jetzt bestellen – Restaurant anrufen"}>
+          <b>{IC.order}</b><span>{vi ? "Đặt món ngay" : "Jetzt bestellen"}</span>
+        </a>
+        {tabs.slice(2).map((x) => (
           <Link key={x.k} href={x.href} className={x.on ? "on" : ""} aria-current={x.on ? "page" : undefined}>{IC[x.k]}<span>{x.label}</span></Link>
         ))}
         <button type="button" className={more || moreOn ? "on" : ""} aria-expanded={more} onClick={() => setMore(!more)}>{IC.more}<span>{vi ? "Thêm" : "Mehr"}</span></button>

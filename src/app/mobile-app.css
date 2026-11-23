@@ -99,3 +99,12 @@
   .menu-frame .mv-legend{order:6}
   .menu-frame .mv-body.searching .mv-list{order:5}
 }
+
+/* ===== Mittiger Bestell-Button in der Tab-Leiste ===== */
+@media(max-width:700px){
+  .mnav{overflow:visible}
+  .mnav .mnav-fab{flex:1.25;justify-content:flex-end;padding-bottom:5px;color:#ffe3a2;font-weight:800;overflow:visible}
+  .mnav .mnav-fab b{position:absolute;top:-22px;left:50%;transform:translateX(-50%);width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#d62b20,#8c1410);border:2.5px solid #ffe3a2;box-shadow:0 6px 16px rgba(0,0,0,.6),0 0 0 4px #150b08;color:#fff}
+  .mnav .mnav-fab b .mnic{width:27px;height:27px;filter:none}
+  .mnav .mnav-fab span{position:relative;z-index:1}
+}
