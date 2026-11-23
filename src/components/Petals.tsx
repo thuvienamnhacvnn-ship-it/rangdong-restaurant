@@ -45,12 +45,13 @@ export default function Petals() {
     };
     resize();
     window.addEventListener("resize", resize);
-    const max = () => (W < 700 ? 16 : 26);
+    const max = () => (W < 700 ? 26 : 26);
     const list: P[] = [];
+    let lane = 0;
     const spawn = (initial = false): P => {
       const side = Math.random();
       // meist unter den beiden Zweigen (links/rechts oben), manche mittig
-      const x = W < 700 ? Math.random() * W : side < .46 ? Math.random() * W * .26 : side < .92 ? W * (.74 + Math.random() * .26) : W * (.26 + Math.random() * .48);
+      const x = W < 700 ? (((lane++ * 7) % 13) + Math.random()) / 13 * W : side < .46 ? Math.random() * W * .26 : side < .92 ? W * (.74 + Math.random() * .26) : W * (.26 + Math.random() * .48);
       const y = initial ? Math.random() * H : -20 - Math.random() * 40 + (side < .92 ? Math.random() * H * .08 : 0);
       const s = (W < 700 ? .55 : .8) * (.55 + Math.random() * .75);
       return { x, y, s, vy: 26 + Math.random() * 34, ph: Math.random() * 6.28, fl: Math.random() * 6.28, fs: 1.4 + Math.random() * 2, rot: Math.random() * 6.28, vr: (Math.random() - .5) * 1.6, sp: .6 + Math.random() * .9, tint: (Math.random() * 3) | 0, life: 0, max: 14 + Math.random() * 10 };
@@ -62,7 +63,7 @@ export default function Petals() {
       if (!run) return;
       const dt = Math.min(.05, (now - last) / 1000); last = now;
       const t = now / 1000;
-      const wind = (W < 700 ? .45 : 1) * (18 + Math.sin(t * .35) * 16 + Math.sin(t * .9 + 1) * 7);       // Grundwind, böig
+      const wind = (W < 700 ? .2 : 1) * (18 + Math.sin(t * .35) * 16 + Math.sin(t * .9 + 1) * 7);       // Grundwind, böig
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
       for (let i = 0; i < list.length; i++) {
