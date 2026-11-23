@@ -45,6 +45,7 @@ export default function HomeStage({ initialMode = "video" }: { initialMode?: Mod
   const [mode, setMode] = useState<Mode>(initialMode);
   const [idx, setIdx] = useState(0);
   const [sub, setSub] = useState(0);
+  const [mob, setMob] = useState(false);
   const played = useRef(0);
   const visits = useRef<number[]>([0, 0, 0, 0]);
   const [hover, setHover] = useState(false);
@@ -59,6 +60,12 @@ export default function HomeStage({ initialMode = "video" }: { initialMode?: Mod
   const touchX = useRef<number | null>(null);
   const cat = CATS[idx];
 
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width:700px)");
+    const f = () => setMob(mq.matches);
+    f(); mq.addEventListener("change", f);
+    return () => mq.removeEventListener("change", f);
+  }, []);
   useEffect(() => { setMode(sp === "still" ? "still" : "video"); }, [sp]);
 
   useEffect(() => {
@@ -136,7 +143,7 @@ export default function HomeStage({ initialMode = "video" }: { initialMode?: Mod
     <div className="category-row" role="tablist" aria-label={t.home.worlds}>
       {CATS.map((x, i) => (
         <button key={x.id} role="tab" aria-selected={i === idx} className={`cat-card${i === idx ? " selected" : ""}`} onClick={() => select(i)} aria-label={t.cats[x.id].name} >
-          <Slides imgs={x.thumbs} delay={i * 900} every={3200} />
+          <Slides imgs={mob ? x.stillsM : x.thumbs} delay={i * 900} every={3200} />
           <span className="cat-ico" aria-hidden>{CAT_ICON[x.id]}</span>
           </button>
       ))}
@@ -158,12 +165,12 @@ export default function HomeStage({ initialMode = "video" }: { initialMode?: Mod
           <>
             <div className="video-wrap">
               <div className="video-frame" ref={frameRef}>
-                <div className="video-poster" style={{ backgroundImage: `url('${cat.posters[sub]}')` }} aria-hidden />
+                <div className="video-poster" style={{ backgroundImage: `url('${(mob ? cat.postersM : cat.posters)[sub]}')` }} aria-hidden />
                 {videoOk && (
                   <video
-                    key={cat.id + sub}
+                    key={cat.id + sub + (mob ? "m" : "d")}
                     ref={videoRef}
-                    poster={cat.posters[sub]}
+                    poster={(mob ? cat.postersM : cat.posters)[sub]}
                     playsInline
                     muted
                     onEnded={onEnded}
@@ -175,7 +182,7 @@ export default function HomeStage({ initialMode = "video" }: { initialMode?: Mod
                     onPlay={() => setPaused(false)}
                     onPause={() => setPaused(true)}
                   >
-                    <source src={cat.videos[sub]} type="video/mp4" />
+                    <source src={(mob ? cat.videosM : cat.videos)[sub]} type="video/mp4" />
                   </video>
                 )}
                 <div className="hero-title" aria-hidden>
@@ -243,7 +250,7 @@ export default function HomeStage({ initialMode = "video" }: { initialMode?: Mod
             <div className="still-hero still4">
               {CATS.map((x, i) => (
                 <button key={x.id} className={`still-cell${i === idx ? " selected" : ""}`} onClick={() => select(i)}>
-                  <Slides imgs={x.stills} delay={i * 700} every={3600} />
+                  <Slides imgs={mob ? x.stillsM : x.stills} delay={i * 700} every={3600} />
                   <span className="stilllabel"><small>{String(i + 1).padStart(2, "0")} / {t.home.gal}</small><strong>{t.cats[x.id].name}</strong><em>{t.cats[x.id].desc}</em></span>
                 </button>
               ))}

@@ -50,3 +50,26 @@
   .ms-h{flex-wrap:wrap;row-gap:2px}
   .ms-h h3{font-size:12.5px!important;letter-spacing:0!important;overflow-wrap:break-word!important;word-break:normal!important;min-width:0;flex:0 1 auto}
 }
+
+/* ===== Handy: Hochformat-Video-Banner, Zweige, Kacheln ===== */
+@media(max-width:700px){
+  /* Kirschzweige links + rechts über der Kopfzeile */
+  video.blossom,video.blossom-r{display:block!important;position:fixed!important;top:0!important;width:44vw!important;height:auto!important;z-index:72!important;pointer-events:none;transform:none!important;mix-blend-mode:normal}
+  video.blossom{left:0!important;right:auto!important}
+  video.blossom-r{right:0!important;left:auto!important}
+  .petals{z-index:73!important}
+
+  /* Start: Hochformat-Video füllt den Bildschirm, 4 Kacheln als Leiste darunter */
+  .home .video-wrap{height:calc(100dvh - var(--mnav-h) - 208px)!important;min-height:380px!important;aspect-ratio:auto!important;margin-top:4px}
+  .home .video-frame video,.home .video-frame .video-poster{object-fit:cover}
+  .home .video-frame:after{background:linear-gradient(transparent 70%,rgba(7,4,3,.55))}
+  .home .video-controls{left:14px;right:14px;bottom:10px}
+  .home .category-row{grid-template-columns:repeat(4,1fr)!important;gap:7px!important;margin-top:10px!important}
+  .home .cat-card{height:78px!important;border-radius:12px!important;border-width:1.5px!important}
+  .home .cat-card .cat-ico svg{width:1.7em!important;height:1.7em!important}
+  .home .still-hero.still4{height:calc(100dvh - var(--mnav-h) - 208px)!important;min-height:380px!important}
+
+  /* Video-Seite: Hochformat-Player */
+  .vd-stage{aspect-ratio:9/14!important;max-height:68vh;border-radius:14px;overflow:hidden}
+  .vd-stage video{width:100%;height:100%;object-fit:cover}
+}

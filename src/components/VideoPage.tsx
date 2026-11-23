@@ -4,6 +4,7 @@ import { Frame } from "@/components/Frame";
 import { useLang } from "@/components/LangProvider";
 import { CATS, type Cat, type CatId } from "@/lib/site";
 import { U } from "@/lib/ui";
+import { useMobile } from "@/lib/useMobile";
 import { GICON } from "@/components/Frame";
 
 const ICON: Record<CatId, string> = { hot: "vn", sushi: "sushi", party: "fest", viet: "vn" };
@@ -12,6 +13,7 @@ const fmt = (s: number) => (isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.f
 
 export default function VideoPage() {
   const { lang } = useLang();
+  const mob = useMobile();
   const u = U[lang].video;
   const [filter, setFilter] = useState<"all" | CatId>("all");
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -53,7 +55,7 @@ export default function VideoPage() {
           <span className="vd-cat">{GICON[ICON[feat.id]]}{name(feat)}</span>
         </div>
         <div className="vd-stage">
-        <video key={feat.id} ref={ref} src={feat.video} poster={feat.poster} muted={muted} loop playsInline preload="metadata"
+        <video key={feat.id} ref={ref} src={mob ? feat.videosM[0] : feat.video} poster={mob ? feat.postersM[0] : feat.poster} muted={muted} loop playsInline preload="metadata"
           onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onTimeUpdate={(e) => setT(e.currentTarget.currentTime)} onLoadedMetadata={(e) => setDur(e.currentTarget.duration)} />
         {!playing && <button className="vd-big" onClick={toggle} aria-label={u.play}><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M8 5v14l11-7z" /></svg></button>}
         <div className="vd-ctl">
