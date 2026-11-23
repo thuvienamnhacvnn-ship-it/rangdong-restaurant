@@ -46,7 +46,7 @@
   /* Sticky Kopfzeile: kompakt */
   .hdr-wrap{position:sticky;top:0;z-index:70}
 
-  .hdr-wrap{background:linear-gradient(#0d0705 78%,rgba(13,7,5,0))}
+  .hdr-wrap{background:linear-gradient(#0d0705 94%,rgba(13,7,5,0))}
   .ms-h{flex-wrap:wrap;row-gap:2px}
   .ms-h h3{font-size:12.5px!important;letter-spacing:0!important;overflow-wrap:break-word!important;word-break:normal!important;min-width:0;flex:0 1 auto}
 }
