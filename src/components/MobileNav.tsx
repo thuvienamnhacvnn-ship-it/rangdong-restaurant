@@ -13,7 +13,7 @@ const I = (d: string[]) => (
 const IC = {
   home: I(["M3 10.5 12 3l9 7.5", "M5 9.5V21h5v-6h4v6h5V9.5"]),
   menu: I(["M5 3v7a2 2 0 0 0 2 2v9", "M9 3v7a2 2 0 0 1-2 2", "M7 3v5", "M18 21V3c-2.5 1.5-3.5 4.5-3.5 8 0 1.7.8 2.5 2 2.5h1.5"]),
-  video: I(["M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z", "M10 8.5v7l5.5-3.5z"]),
+  advisor: I(["M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H11l-4.5 4v-4h0A2.5 2.5 0 0 1 4 13.5z", "M8.5 8.5h7M8.5 11.5h4"]),
   booking: I(["M7 3v3M17 3v3", "M4 8h16v12H4z", "M4 11.5h16", "M8 15h2M12 15h2"]),
   more: I(["M5 12h.01M12 12h.01M19 12h.01"]),
   signature: I(["M12 3l2.1 5.4L20 9.2l-4.4 3.8 1.4 5.7L12 15.5 7 18.7l1.4-5.7L4 9.2l5.9-.8z"]),
@@ -36,17 +36,16 @@ export default function MobileNav() {
   const vi = lang === "vi";
   const tabs: { k: keyof typeof IC; href: string; label: string; on: boolean }[] = [
     { k: "home", href: "/", label: t.nav.home, on: path === "/" && mode !== "video" },
-    { k: "menu", href: "/speisekarte", label: t.nav.menu, on: path === "/speisekarte" || path === "/food-guide" },
+    { k: "menu", href: "/speisekarte", label: t.nav.menu, on: path === "/speisekarte" },
     { k: "booking", href: "/reservierung", label: t.nav.booking, on: path === "/reservierung" },
   ];
-  const moreOn = ["/video", "/signature", "/events", "/party-technik", "/ambiente", "/kontakt", "/food-guide", "/impressum", "/datenschutz"].includes(path) && path !== "/food-guide";
+  const moreOn = ["/tu-van", "/signature", "/events", "/party-technik", "/ambiente", "/kontakt", "/food-guide", "/impressum", "/datenschutz"].includes(path) && path !== "/food-guide";
   const items: { k: keyof typeof IC; href: string; label: string }[] = [
-    { k: "video", href: "/video", label: t.nav.video },
+    { k: "advisor", href: "/tu-van", label: t.nav.advisor },
     { k: "signature", href: "/signature", label: t.nav.signature },
     { k: "events", href: "/events", label: t.nav.events },
     { k: "ambience", href: "/ambiente", label: t.nav.ambience },
     { k: "contact", href: "/kontakt", label: t.nav.contact },
-    { k: "guide", href: "/food-guide", label: "Food Guide" },
     { k: "party", href: "/party-technik", label: "Party & Technik" },
   ];
 

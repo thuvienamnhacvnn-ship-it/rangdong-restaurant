@@ -7,7 +7,7 @@ export const T = {
   de: {
     htmlLang: "de",
     tagline: "JAPANISCHE & VIETNAMESISCHE KÜCHE",
-    nav: { home: "Home", menu: "Speisekarte", signature: "Signature", video: "Video", booking: "Reservierung", events: "Events", ambience: "Ambiente", contact: "Kontakt" },
+    nav: { home: "Home", menu: "Speisekarte", signature: "Signature", advisor: "Berater", booking: "Reservierung", events: "Events", ambience: "Ambiente", contact: "Kontakt" },
     menuBtn: "Menü öffnen",
     cats: {
       hot: { name: "Warme Küche", desc: "Heiße Spezialitäten" },
@@ -29,7 +29,7 @@ export const T = {
   vi: {
     htmlLang: "vi",
     tagline: "ẨM THỰC NHẬT BẢN & VIỆT NAM",
-    nav: { home: "Trang chủ", menu: "Thực đơn", signature: "Món đặc sắc", video: "Video", booking: "Đặt bàn", events: "Tiệc & Sự kiện", ambience: "Không gian", contact: "Liên hệ" },
+    nav: { home: "Trang chủ", menu: "Thực đơn", signature: "Món đặc sắc", advisor: "Tư vấn món", booking: "Đặt bàn", events: "Tiệc & Sự kiện", ambience: "Không gian", contact: "Liên hệ" },
     menuBtn: "Mở menu",
     cats: {
       hot: { name: "Đồ ăn nóng", desc: "Món nóng hổi, đậm đà hương vị" },
