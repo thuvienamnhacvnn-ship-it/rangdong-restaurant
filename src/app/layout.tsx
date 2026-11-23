@@ -5,8 +5,10 @@ import "./globals.css";
 import "./hdr.css";
 import "./sub.css";
 import "./menu-sheet.css";
+import "./mobile-app.css";
 import Header from "@/components/Header";
 import Petals from "@/components/Petals";
+import MobileNav from "@/components/MobileNav";
 import Stage from "@/components/Stage";
 import { LangProvider } from "@/components/LangProvider";
 import { getLang } from "@/lib/lang";
@@ -43,6 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <Suspense fallback={null}><Header logo3d={logo3d} /></Suspense>
             {children}
           </Stage>
+          <Suspense fallback={null}><MobileNav /></Suspense>
         </LangProvider>
       </body>
     </html>

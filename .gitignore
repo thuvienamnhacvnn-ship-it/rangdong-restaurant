@@ -4,3 +4,7 @@ node_modules
 dev.log
 *.tsbuildinfo
 .vercel
+
+.vercel
+.env*
+public/__m.html

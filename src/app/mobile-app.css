@@ -1,0 +1,52 @@
+/* ===== Handy-App-Modus (≤700 px): untere Tab-Leiste, kompakte Kopfzeile, Vollbild-Seiten ===== */
+.mnav,.msheet,.msheet-bg{display:none}
+@media(max-width:700px){
+  :root{--mnav-h:calc(62px + env(safe-area-inset-bottom,0px))}
+  html{scroll-behavior:auto;-webkit-tap-highlight-color:transparent}
+  body{padding-bottom:var(--mnav-h);overscroll-behavior-y:none}
+  .hmenu,.drawer,.skip{display:none!important}
+  .home .homefooter{display:none}
+  .page{padding-bottom:18px!important;min-height:calc(100vh - var(--mnav-h) - 70px)!important}
+  .bottom-note{display:none!important}
+
+  /* Tab-Leiste */
+  .mnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:80;height:var(--mnav-h);padding:0 4px env(safe-area-inset-bottom,0px);background:linear-gradient(#1b100b,#0e0705);border-top:1px solid #b88a4a;box-shadow:0 -10px 28px rgba(0,0,0,.55)}
+  .mnav a,.mnav button{flex:1;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;padding:6px 2px 0;background:none;border:0;color:#bfa786;font:600 10.5px/1.1 var(--font-lato),system-ui,sans-serif;letter-spacing:.2px;text-decoration:none;cursor:pointer}
+  .mnav span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mnav .mnic{width:23px;height:23px}
+  .mnav .on{color:#ffe3a2}
+  .mnav .on:before{content:"";position:absolute;top:-1px;left:22%;right:22%;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,#b47c34,#ffe9a8,#b47c34)}
+  .mnav .on .mnic{filter:drop-shadow(0 0 6px rgba(255,214,130,.45))}
+
+  /* "Mehr"-Sheet */
+  .msheet-bg{display:block;position:fixed;inset:0;z-index:85;background:rgba(5,2,1,.62);opacity:0;pointer-events:none;transition:opacity .25s}
+  .msheet-bg.open{opacity:1;pointer-events:auto}
+  .msheet{display:block;position:fixed;left:0;right:0;bottom:var(--mnav-h);z-index:90;padding:10px 16px 16px;border-radius:22px 22px 0 0;background:#190e0a;border:1px solid #b88a4a;border-bottom:0;transform:translateY(calc(100% + var(--mnav-h)));transition:transform .28s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+  .msheet.open{transform:none;visibility:visible}
+  .msheet .grab{display:block;width:42px;height:4px;border-radius:3px;background:#6d5636;margin:0 auto 14px}
+  .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .mgrid a{display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 4px 12px;border:1px solid rgba(212,165,90,.5);border-radius:14px;background:#24140d;color:#f1dfbd;font:600 12px/1.2 var(--font-lato),sans-serif;text-align:center;text-decoration:none}
+  .mgrid a.on{border-color:#ffe3a2;background:#3a2112;color:#ffe3a2}
+  .mgrid .mnic{width:26px;height:26px;color:#e9c277}
+  .mfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid rgba(212,165,90,.25);font-size:12px}
+  .mfoot a{color:#bfa786;text-decoration:none}
+  .mlang{display:flex;border:1px solid #b88a4a;border-radius:20px;overflow:hidden}
+  .mlang button{border:0;background:none;color:#cdb79b;padding:7px 15px;font:700 12px var(--font-lato),sans-serif}
+  .mlang button.cur{background:linear-gradient(120deg,#a86f35,#f0cd86);color:#160d09}
+
+  /* Startseite = ein Bildschirm: Video + 2×2 Kacheln */
+  .home .video-wrap{height:auto!important;min-height:0!important;aspect-ratio:16/10}
+  .home .category-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important;margin-top:12px!important;height:auto!important}
+  .home .cat-card{height:max(96px,calc((100vh - var(--mnav-h) - 64px - (100vw - 30px)*.625 - 36px)/2))!important;min-height:0!important;border-radius:14px!important}
+  .home .still-hero.still4{grid-template-columns:1fr 1fr!important;grid-template-rows:1fr 1fr!important;height:calc(100vh - var(--mnav-h) - 150px)!important;min-height:420px!important;gap:10px!important}
+  .home .still-cell .stilllabel strong{font-size:1.15em!important}
+  .home .still-cell .stilllabel em{display:none}
+  .home .view-toggle{font-size:11px!important;padding:6px 10px!important}
+
+  /* Sticky Kopfzeile: kompakt */
+  .hdr-wrap{position:sticky;top:0;z-index:70}
+
+  .hdr-wrap{background:linear-gradient(#0d0705 78%,rgba(13,7,5,0))}
+  .ms-h{flex-wrap:wrap;row-gap:2px}
+  .ms-h h3{font-size:12.5px!important;letter-spacing:0!important;overflow-wrap:break-word!important;word-break:normal!important;min-width:0;flex:0 1 auto}
+}
