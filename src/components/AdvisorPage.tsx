@@ -61,6 +61,8 @@ function recommend(kb: K[], it: Intent): Pick[] {
   for (const k of kb) {
     if (it.veg && !k.i.veg) continue;
     if (it.mild && k.i.hot) continue;
+    if (it.hot && !k.i.hot) continue;
+    if (it.cat === "sushi" && /bowl/i.test(k.i.name)) continue;
     if (it.budget && k.price === null) continue;
     if (it.budget && k.price !== null && k.price > it.budget) continue;
     if (it.cat ? k.cat !== it.cat : ["drink", "dessert", "kids", "fest"].includes(k.cat)) continue;
@@ -126,7 +128,7 @@ const TXT = {
   },
 } as const;
 
-type Msg = { who: "bot" | "user"; text: string; dishes?: { k: K; why: string[] }[]; cta?: ("book" | "menu" | "events")[] };
+type Msg = { lg?: "de" | "vi"; who: "bot" | "user"; text: string; dishes?: { k: K; why: string[] }[]; cta?: ("book" | "menu" | "events")[] };
 
 export default function AdvisorPage() {
   const { lang } = useLang();
@@ -139,22 +141,24 @@ export default function AdvisorPage() {
   useEffect(() => { log.current?.scrollTo({ top: log.current.scrollHeight, behavior: "smooth" }); }, [msgs]);
 
   const answer = (q: string): Msg => {
+    const de = !/[ăâêôơưđàáạảãèéẹẻẽìíòóọỏõùúụủũỳýỵỷỹ]/i.test(q) && /[äöüß]|\b(ich|und|oder|mit|ohne|unter|scharf|vegetarisch|vegan|für|fur|rind\w*|huhn|hähnchen|empfehl\w*|personen|suppe|nicht|gericht\w*|bitte|hallo|feier|kinder|getränk\w*|vorspeise)\b/i.test(q);
+    const lg: "de" | "vi" = de ? "de" : lang;
+    const T = TXT[lg];
     const it = parse(q);
     if (it.group) {
       const fest = kb.filter((k) => k.cat === "fest").slice(0, 4).map((k) => ({ k, why: [] as string[] }));
-      return { who: "bot", text: T.group, dishes: fest, cta: ["book", "events"] };
+      return { lg, who: "bot", text: T.group, dishes: fest, cta: ["book", "events"] };
     }
     if (it.people && !it.cat && !it.tags.length) {
       const p = plan(kb, it.people, it.veg);
-      return { who: "bot", text: T.planFor(it.people, p.perPerson), dishes: p.picks.map((k) => ({ k, why: [] })), cta: ["book", "menu"] };
+      return { lg, who: "bot", text: T.planFor(it.people, p.perPerson), dishes: p.picks.map((k) => ({ k, why: [] })), cta: ["book", "menu"] };
     }
     const res = recommend(kb, it).slice(0, 4);
-    if (!res.length) return { who: "bot", text: T.none, cta: ["menu"] };
-    return { who: "bot", text: T.found(res.length), dishes: res, cta: ["menu", "book"] };
+    if (!res.length) return { lg, who: "bot", text: T.none, cta: ["menu"] };
+    return { lg, who: "bot", text: T.found(res.length), dishes: res, cta: ["menu", "book"] };
   };
   const ask = (q: string) => setMsgs((m) => [...m, { who: "user", text: q }, answer(q)]);
-  const dsc = (i: Item) => (lang === "vi" ? i.vi ?? i.en ?? i.de : i.de ?? i.vi ?? i.en);
-  const link = { book: ["/reservierung", T.cta], menu: ["/speisekarte", T.ctaMenu], events: ["/events", T.ctaEv] } as const;
+  const dsc = (i: Item, lg: "de" | "vi") => (lg === "vi" ? i.vi ?? i.en ?? i.de : i.de ?? i.vi ?? i.en);
 
   return (
     <Frame title={T.title} sub={T.sub}>
@@ -166,8 +170,9 @@ export default function AdvisorPage() {
               {m.dishes && (
                 <div className="adv-cards">
                   {m.dishes.map(({ k, why }) => {
+                    const L = m.lg ?? lang; const T = TXT[L];
                     const pr = lowestPrice(k.i);
-                    const d = dsc(k.i);
+                    const d = dsc(k.i, L);
                     return (
                       <Link key={k.i.id} href={`/speisekarte?g=${k.gid}&s=${k.sid}`} className="adv-card">
                         <div className="adv-h"><b>{k.i.name}</b>{pr && <span className="adv-pr">{k.i.opts ? <small>{T.from} </small> : null}{pr}</span>}</div>
@@ -183,7 +188,7 @@ export default function AdvisorPage() {
                   })}
                 </div>
               )}
-              {m.cta && <div className="adv-cta">{m.cta.map((c) => <Link key={c} href={link[c][0]}>{link[c][1]}</Link>)}</div>}
+              {m.cta && <div className="adv-cta">{m.cta.map((c) => { const l2 = { book: ["/reservierung", TXT[m.lg ?? lang].cta], menu: ["/speisekarte", TXT[m.lg ?? lang].ctaMenu], events: ["/events", TXT[m.lg ?? lang].ctaEv] } as const; return <Link key={c} href={l2[c][0]}>{l2[c][1]}</Link>; })}</div>}
             </div>
           ))}
         </div>
