@@ -195,6 +195,7 @@ export default function AdvisorPage() {
               {m.cta && <div className="adv-cta">{m.cta.map((c) => { const l2 = { book: ["/reservierung", TXT[m.lg ?? lang].cta], menu: ["/speisekarte", TXT[m.lg ?? lang].ctaMenu], events: ["/events", TXT[m.lg ?? lang].ctaEv] } as const; return <Link key={c} href={l2[c][0]}>{l2[c][1]}</Link>; })}</div>}
             </div>
           ))}
+          {msgs.length === 1 && <div className="adv-hero" aria-hidden>{["p01", "p12", "p24", "p30"].map((f) => <img key={f} src={`/img/food/${f}.webp`} alt="" />)}</div>}
         </div>
         <div className="adv-chips">{T.chips.map(([l, q]) => <button key={l} type="button" onClick={() => ask(q)}>{l}</button>)}</div>
         <form className="adv-form" onSubmit={(e) => { e.preventDefault(); const q = val.trim(); if (q) ask(q); setVal(""); }}>
