@@ -45,3 +45,5 @@
   .cart-panel.open{transform:none}
 }
 @media(max-width:700px){.menu-frame .ms-head{display:none}}
+
+@media(max-width:700px){.qty button{width:36px;height:36px}.qty-add{width:38px;height:38px}.ms-o li .qty button{width:34px;height:34px}.ms-o li .qty-add{width:36px;height:36px}.menu-frame .mv-pic{height:120px!important}}

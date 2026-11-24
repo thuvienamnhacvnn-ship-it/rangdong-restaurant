@@ -5,8 +5,8 @@ import { change, clearCart, count, eur, total, useCart } from "@/lib/cart";
 import { SITE } from "@/lib/site";
 
 const TX = {
-  de: { open: "Warenkorb", title: "Ihre Auswahl", empty: "Noch nichts gewählt. Tippen Sie bei einem Gericht auf +.", sum: "Summe", call: "Jetzt anrufen & bestellen", copy: "Bestellung kopieren", copied: "Kopiert ✓", clear: "Leeren", close: "Schließen", note: "Preise laut Speisekarte. Bestellung und Zahlung bestätigen wir am Telefon.", head: "Bestellung Rạng Đông", sumTxt: "Summe" },
-  vi: { open: "Giỏ hàng", title: "Món đã chọn", empty: "Chưa chọn món nào. Bấm + ở món bạn muốn.", sum: "Tổng cộng", call: "Gọi điện đặt món ngay", copy: "Sao chép đơn", copied: "Đã chép ✓", clear: "Xóa hết", close: "Đóng", note: "Giá theo thực đơn. Nhà hàng xác nhận đơn và thanh toán qua điện thoại.", head: "Đơn đặt món Rạng Đông", sumTxt: "Tổng" },
+  de: { open: "Warenkorb", title: "Ihre Auswahl", empty: "Noch nichts gewählt. Tippen Sie bei einem Gericht auf +.", sum: "Summe", call: "Jetzt anrufen & bestellen", copy: "Bestellung kopieren", copied: "Kopiert ✓", clear: "Leeren", close: "Schließen", note: "Preise laut Speisekarte. Bestellung und Zahlung bestätigen wir am Telefon.", head: "Bestellung / Đơn đặt món – Rạng Đông", sumTxt: "Summe" },
+  vi: { open: "Giỏ hàng", title: "Món đã chọn", empty: "Chưa chọn món nào. Bấm + ở món bạn muốn.", sum: "Tổng cộng", call: "Gọi điện đặt món ngay", copy: "Sao chép đơn", copied: "Đã chép ✓", clear: "Xóa hết", close: "Đóng", note: "Giá theo thực đơn. Nhà hàng xác nhận đơn và thanh toán qua điện thoại.", head: "Bestellung / Đơn đặt món – Rạng Đông", sumTxt: "Tổng" },
 };
 
 export default function CartBar({ lang }: { lang: "de" | "vi" }) {

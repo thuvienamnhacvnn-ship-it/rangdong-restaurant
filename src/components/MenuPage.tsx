@@ -39,7 +39,19 @@ function Pr({ i }: { i: Item }) {
 
 interface Var { key: string; name: string; label?: string; price: number }
 /** Bestellbare Varianten eines Gerichts (nur mit eindeutigem Preis) */
-function variants(i: Item, choices?: Opt[]): Var[] {
+function slashVars(i: Item, mam: boolean): Var[] | null {
+  const pr = i.price?.trim();
+  if (!pr) return null;
+  const per = pr.match(/^(\d+(?:[.,]\d+)?)\s*€\s*\/\s*(\S+)$/);
+  if (per) return [{ key: i.id, name: i.name, label: `/ ${per[2].toLowerCase()}`, price: parseFloat(per[1].replace(",", ".")) }];
+  const m = pr.match(/^(\d+(?:[.,]\d+)?(?:\s*\/\s*\d+(?:[.,]\d+)?)+)\s*€$/);
+  if (!m) return null;
+  const nums = m[1].split("/").map((x) => parseFloat(x.trim().replace(",", ".")));
+  const labels = mam && nums.length === 3 ? ["Mâm 6", "Mâm 8", "Mâm 10"] : nums.map((_, k) => `Mức ${k + 1}`);
+  return nums.map((n, k) => ({ key: `${i.id}:${k}`, name: i.name, label: labels[k], price: n }));
+}
+function variants(i: Item, choices?: Opt[], mam = false): Var[] {
+  if (!i.opts && !i.prices) { const sv = slashVars(i, mam); if (sv) return sv; }
   if (i.opts?.some((o) => o.price)) return i.opts.flatMap((o) => { const p = parsePrice(o.price); return p == null ? [] : [{ key: `${i.id}:${o.k}`, name: i.name, label: `${o.k} ${o.de}`, price: p }]; });
   if (i.prices) return i.prices.flatMap(([u, pr]) => { const p = parsePrice(pr); return p == null ? [] : [{ key: `${i.id}:${u}`, name: i.name, label: u, price: p }]; });
   if (i.price) { const p = parsePrice(i.price); return p == null ? [] : [{ key: i.id, name: i.name, price: p }]; }
@@ -75,14 +87,14 @@ function OptRow({ o, lang, cart }: { o: Opt; lang: L; cart?: { id: string; name:
   );
 }
 
-function Row({ i, lang, u, tag, choices }: { i: Item; lang: L; u: (typeof U)["de"]["menu"]; tag?: string; choices?: Opt[] }) {
+function Row({ i, lang, u, tag, choices, mam }: { i: Item; lang: L; u: (typeof U)["de"]["menu"]; tag?: string; choices?: Opt[]; mam?: boolean }) {
   const vi = lang === "vi";
   const d = desc(i, lang);
   const d2 = !vi && i.en && i.de && i.en !== i.de ? i.en : "";
   const ch = !i.opts && !i.price && !i.prices ? choices : undefined;
   const from = ch ? Math.min(...ch.map((o) => parseFloat(o.price))).toFixed(2) + " €" : undefined;
   const hasOptPrice = i.opts?.some((o) => o.price);
-  const vs = variants(i, ch);
+  const vs = variants(i, ch, !!mam);
   const single = vs.length === 1 && !i.opts;
   const multi = vs.length > 1 && !i.opts;
   const cls = `ms-i${i.veg ? " veg" : ""}${i.hot ? " hot" : ""}${i.opts ? " has-o" : ""}`;
@@ -197,11 +209,11 @@ export default function MenuPage() {
             )}
             <div className="ms-cols">
               {searching
-                ? hits.length ? hits.map(({ g: gg, s, i }) => <Row key={i.id} i={i} lang={lang} u={u} choices={s.choices} tag={`${vi ? gg.shortVi : gg.short} · ${vi ? s.vi : s.de}`} />) : <div className="mv-empty">{u.empty}</div>
+                ? hits.length ? hits.map(({ g: gg, s, i }) => <Row key={i.id} i={i} lang={lang} u={u} choices={s.choices} mam={s.id === "tiec"} tag={`${vi ? gg.shortVi : gg.short} · ${vi ? s.vi : s.de}`} />) : <div className="mv-empty">{u.empty}</div>
                 : sec.items.map((i) => (
                   <Fragment key={i.id}>
                     {i.sub && <h4 className="ms-sub"><span>{i.sub}</span></h4>}
-                    <Row i={i} lang={lang} u={u} choices={sec.choices} />
+                    <Row i={i} lang={lang} u={u} choices={sec.choices} mam={sec.id === "tiec"} />
                   </Fragment>
                 ))}
             </div>
