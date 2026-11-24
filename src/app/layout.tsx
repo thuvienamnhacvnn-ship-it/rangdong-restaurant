@@ -1,3 +1,4 @@
+import AlphaVideo from "@/components/AlphaVideo";
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { Lato, Noto_Serif, Noto_Sans, Tinos } from "next/font/google";
@@ -37,8 +38,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div className="ambient" />
           <Petals />
           <div className="noise" />
-          <video className="blossom" autoPlay loop muted playsInline preload="auto" poster="/fx/branchL.png" aria-hidden><source src="/fx/branchL.webm" type="video/webm" /></video>
-          <video className="blossom blossom-r" autoPlay loop muted playsInline preload="auto" poster="/fx/branchR.png" aria-hidden><source src="/fx/branchR.webm" type="video/webm" /></video>
+          <AlphaVideo className="blossom" webm="/fx/branchL.webm" stack="/fx/branchL.stack.mp4" poster="/fx/branchL.png" w={920} h={246} />
+          <AlphaVideo className="blossom blossom-r" webm="/fx/branchR.webm" stack="/fx/branchR.stack.mp4" poster="/fx/branchR.png" w={920} h={281} />
           <Stage>
             <Suspense fallback={null}><Header logo3d={logo3d} /></Suspense>
             {children}

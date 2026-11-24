@@ -54,9 +54,9 @@
 /* ===== Handy: Hochformat-Video-Banner, Zweige, Kacheln ===== */
 @media(max-width:700px){
   /* Kirschzweige links + rechts über der Kopfzeile */
-  video.blossom,video.blossom-r{display:block!important;position:fixed!important;top:0!important;width:44vw!important;height:auto!important;z-index:72!important;pointer-events:none;transform:none!important;mix-blend-mode:normal}
-  video.blossom{left:0!important;right:auto!important}
-  video.blossom-r{right:0!important;left:auto!important}
+  :is(video,canvas,img).blossom,:is(video,canvas,img).blossom-r{display:block!important;position:fixed!important;top:0!important;width:44vw!important;height:auto!important;z-index:72!important;pointer-events:none;transform:none!important;mix-blend-mode:normal}
+  :is(video,canvas,img).blossom{left:0!important;right:auto!important}
+  :is(video,canvas,img).blossom-r{right:0!important;left:auto!important}
   .petals{z-index:73!important}
 
   /* Start: Hochformat-Video füllt den Bildschirm, 4 Kacheln als Leiste darunter */
