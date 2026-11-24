@@ -29,7 +29,7 @@ export const T = {
   vi: {
     htmlLang: "vi",
     tagline: "ẨM THỰC NHẬT BẢN & VIỆT NAM",
-    nav: { home: "Trang chủ", menu: "Thực đơn", signature: "Món đặc sắc", advisor: "Tư vấn món", booking: "Đặt bàn", events: "Tiệc & Sự kiện", ambience: "Không gian", contact: "Liên hệ" },
+    nav: { home: "Trang chủ", menu: "Thực đơn", signature: "Món đặc sắc", advisor: "Tư vấn", booking: "Đặt bàn", events: "Tiệc & Sự kiện", ambience: "Không gian", contact: "Liên hệ" },
     menuBtn: "Mở menu",
     cats: {
       hot: { name: "Đồ ăn nóng", desc: "Món nóng hổi, đậm đà hương vị" },
