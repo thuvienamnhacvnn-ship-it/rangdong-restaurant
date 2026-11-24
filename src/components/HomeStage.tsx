@@ -124,7 +124,7 @@ export default function HomeStage({ initialMode = "video" }: { initialMode?: Mod
     if (reduced) { v.pause(); setPaused(true); return; }
     v.play().then(() => setPaused(false)).catch(() => setPaused(true));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idx, sub, mode, reduced, videoOk]);
+  }, [idx, sub, mode, reduced, videoOk, mob]);
 
   const mark = (m: Mode) => {
     setMode(m);
@@ -173,12 +173,14 @@ export default function HomeStage({ initialMode = "video" }: { initialMode?: Mod
                     poster={(mob ? cat.postersM : cat.posters)[sub]}
                     playsInline
                     muted
+                    autoPlay
                     onEnded={onEnded}
                     preload="metadata"
                     aria-label={`${t.cats[cat.id].name} – Video`}
                     onError={() => setVideoOk(false)}
                     onTimeUpdate={(e) => { setTime(e.currentTarget.currentTime); if (e.currentTarget.duration) setDur(e.currentTarget.duration); }}
                     onLoadedMetadata={(e) => setDur(e.currentTarget.duration || 6)}
+                    onCanPlay={(e) => { const v = e.currentTarget; if (!reduced && v.paused && v.currentTime === 0) v.play().catch(() => {}); }}
                     onPlay={() => setPaused(false)}
                     onPause={() => setPaused(true)}
                   >
