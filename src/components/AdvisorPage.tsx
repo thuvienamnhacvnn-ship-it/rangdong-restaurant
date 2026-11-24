@@ -103,6 +103,7 @@ const TXT = {
   de: {
     title: "Berater", sub: "Ihr Gericht-Berater – kennt jedes Gericht unserer Karte",
     hi: (n: number) => `Hallo! Ich habe alle ${n} Gerichte und Getränke von Rạng Đông gelernt – Zutaten, Schärfe, Preis, vegetarisch. Sagen Sie mir, worauf Sie Lust haben (z. B. „Rind, nicht scharf, unter 14 €“), oder tippen Sie unten auf eine Frage.`,
+    role: "KI-Berater · Küchenchef",
     ph: "Was möchten Sie essen? z. B. „vegetarisch, scharf“", send: "Senden",
     chips: [["Für 2 Personen", "Empfehlung für 2 Personen"], ["Vegetarisch", "vegetarisch"], ["Etwas Scharfes", "scharf"], ["Sushi", "Sushi Empfehlung"], ["Unter 12 €", "unter 12 €"], ["Geburtstag, 8 Personen", "Feier für 8 Personen"], ["Mit Rind", "Rind"], ["Suppe & Nudeln", "Suppe Nudeln"], ["Kinder", "Kinder"], ["Überrasch mich", "Überrasch mich"]],
     none: "Dazu habe ich in unserer Karte nichts Passendes gefunden. Versuchen Sie es mit einer Zutat (Rind, Huhn, Garnelen, Tofu …), einer Vorliebe (scharf, vegetarisch) oder einem Budget („unter 12 €“).",
@@ -116,6 +117,7 @@ const TXT = {
   vi: {
     title: "Tư vấn món", sub: "Trợ lý tư vấn – đã học toàn bộ món ăn của nhà hàng",
     hi: (n: number) => `Xin chào! Em đã học toàn bộ ${n} món ăn và đồ uống của Rạng Đông: nguyên liệu, độ cay, giá, món chay. Anh/chị cứ nói mình thích gì (ví dụ “món bò, không cay, dưới 14 €”) hoặc bấm một câu hỏi bên dưới.`,
+    role: "Chuyên viên tư vấn AI",
     ph: "Anh/chị muốn ăn gì? ví dụ “món chay, cay”", send: "Gửi",
     chips: [["Gợi ý cho 2 người", "gợi ý cho 2 người"], ["Món chay", "món chay"], ["Món cay", "món cay"], ["Sushi", "sushi"], ["Dưới 12 €", "dưới 12 €"], ["Sinh nhật 8 người", "tiệc cho 8 người"], ["Món bò", "bò"], ["Phở & bún", "phở bún"], ["Cho trẻ em", "trẻ em"], ["Gợi ý bất kỳ", "gợi ý cho tôi"]],
     none: "Em chưa tìm thấy món phù hợp trong thực đơn. Anh/chị thử nói một nguyên liệu (bò, gà, tôm, đậu hũ…), sở thích (cay, chay) hoặc ngân sách (“dưới 12 €”) nhé.",
@@ -163,6 +165,8 @@ export default function AdvisorPage() {
   return (
     <Frame title={T.title} sub={T.sub}>
       <div className="adv">
+        <aside className="adv-chef"><img key={msgs.length} src="/advisor/chef.webp" alt="" width={354} height={473} /><b>{T.role}</b></aside>
+        <div className="adv-main">
         <div ref={log} className="adv-log" aria-live="polite">
           {msgs.map((m, n) => (
             <div key={n} className={`adv-row${m.who === "user" ? " me" : ""}`}>
@@ -198,6 +202,7 @@ export default function AdvisorPage() {
           <button type="submit">{T.send}</button>
         </form>
         <p className="adv-note">{T.note}</p>
+        </div>
       </div>
     </Frame>
   );
