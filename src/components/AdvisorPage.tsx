@@ -107,7 +107,8 @@ const TXT = {
     ph: "Was möchten Sie essen? z. B. „vegetarisch, scharf“", send: "Senden",
     chips: [["Für 2 Personen", "Empfehlung für 2 Personen"], ["Vegetarisch", "vegetarisch"], ["Etwas Scharfes", "scharf"], ["Sushi", "Sushi Empfehlung"], ["Unter 12 €", "unter 12 €"], ["Geburtstag, 8 Personen", "Feier für 8 Personen"], ["Mit Rind", "Rind"], ["Suppe & Nudeln", "Suppe Nudeln"], ["Kinder", "Kinder"], ["Überrasch mich", "Überrasch mich"]],
     none: "Dazu habe ich in unserer Karte nichts Passendes gefunden. Versuchen Sie es mit einer Zutat (Rind, Huhn, Garnelen, Tofu …), einer Vorliebe (scharf, vegetarisch) oder einem Budget („unter 12 €“).",
-    found: (n: number) => `Das passt zu Ihnen – ${n} Vorschläge aus unserer Karte:`,
+    found: (n: number) => `Das passt zu Ihnen – ${n} ${n === 1 ? "Vorschlag" : "Vorschläge"} aus unserer Karte:`,
+    relax: (hot: boolean, bud: boolean, b: number | undefined) => `Genau so habe ich nichts gefunden (${[hot ? "scharf" : "", bud ? `unter ${b} €` : ""].filter(Boolean).join(" + ")}). Am nächsten kommt:`,
     planFor: (n: number, pp: number) => `Mein Vorschlag für ${n} ${n === 1 ? "Person" : "Personen"} zum Teilen – Richtwert ca. ${pp.toFixed(0)} € pro Person (Preise laut Karte):`,
     group: "Für Feiern und größere Gruppen empfehlen wir unsere Festmenüs (Mâm für 6 / 8 / 10 Personen) – gern persönlich abgestimmt:",
     cta: "Tisch reservieren", ctaMenu: "Zur Speisekarte", ctaEv: "Feiern bei uns",
@@ -122,6 +123,7 @@ const TXT = {
     chips: [["Gợi ý cho 2 người", "gợi ý cho 2 người"], ["Món chay", "món chay"], ["Món cay", "món cay"], ["Sushi", "sushi"], ["Dưới 12 €", "dưới 12 €"], ["Sinh nhật 8 người", "tiệc cho 8 người"], ["Món bò", "bò"], ["Phở & bún", "phở bún"], ["Cho trẻ em", "trẻ em"], ["Gợi ý bất kỳ", "gợi ý cho tôi"]],
     none: "Em chưa tìm thấy món phù hợp trong thực đơn. Anh/chị thử nói một nguyên liệu (bò, gà, tôm, đậu hũ…), sở thích (cay, chay) hoặc ngân sách (“dưới 12 €”) nhé.",
     found: (n: number) => `Những món hợp ý anh/chị – ${n} gợi ý từ thực đơn:`,
+    relax: (hot: boolean, bud: boolean, b: number | undefined) => `Em không có món đúng hoàn toàn (${[hot ? "cay" : "", bud ? `dưới ${b} €` : ""].filter(Boolean).join(" + ")}). Gần nhất là:`,
     planFor: (n: number, pp: number) => `Em gợi ý bộ món cho ${n} người ăn chung – khoảng ${pp.toFixed(0)} € mỗi người (giá theo thực đơn):`,
     group: "Với tiệc và nhóm đông, nhà hàng có thực đơn tiệc (mâm 6 / 8 / 10 người), có thể trao đổi riêng:",
     cta: "Đặt bàn", ctaMenu: "Xem thực đơn", ctaEv: "Tổ chức tiệc",
@@ -155,7 +157,15 @@ export default function AdvisorPage() {
       const p = plan(kb, it.people, it.veg);
       return { lg, who: "bot", text: T.planFor(it.people, p.perPerson), dishes: p.picks.map((k) => ({ k, why: [] })), cta: ["book", "menu"] };
     }
-    const res = recommend(kb, it).slice(0, 4);
+    let res = recommend(kb, it).slice(0, 4);
+    if (!res.length && (it.hot || it.budget)) {
+      // Bedingungen schrittweise lockern und offen sagen, was gelockert wurde
+      const tries: [boolean, boolean][] = it.hot && it.budget ? [[true, false], [false, true], [true, true]] : [[!!it.hot, !!it.budget]];
+      for (const [dh, db] of tries) {
+        const r2 = recommend(kb, { ...it, hot: dh ? false : it.hot, budget: db ? undefined : it.budget }).slice(0, 4);
+        if (r2.length) return { lg, who: "bot", text: T.relax(dh, db, it.budget), dishes: r2, cta: ["menu", "book"] };
+      }
+    }
     if (!res.length) return { lg, who: "bot", text: T.none, cta: ["menu"] };
     return { lg, who: "bot", text: T.found(res.length), dishes: res, cta: ["menu", "book"] };
   };

@@ -5,6 +5,9 @@ import { Frame, GICON } from "@/components/Frame";
 import { useLang } from "@/components/LangProvider";
 import { FLAT, GROUPS, lowestPrice, type GroupId, type Item, type Opt } from "@/lib/menu";
 import { U } from "@/lib/ui";
+import CartBar from "@/components/CartBar";
+import { change, eur, parsePrice, useCart } from "@/lib/cart";
+import "@/app/menu-cart.css";
 
 const norm = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase();
 const INDEX = FLAT.map((x) => ({ ...x, hay: norm([x.i.name, x.i.n, x.i.de, x.i.en, x.i.vi, x.i.opts?.map((o) => o.de + " " + (o.en ?? "")).join(" ")].filter(Boolean).join(" ")) }));
@@ -34,14 +37,40 @@ function Pr({ i }: { i: Item }) {
   return null;
 }
 
-function OptRow({ o, lang }: { o: Opt; lang: L }) {
+interface Var { key: string; name: string; label?: string; price: number }
+/** Bestellbare Varianten eines Gerichts (nur mit eindeutigem Preis) */
+function variants(i: Item, choices?: Opt[]): Var[] {
+  if (i.opts?.some((o) => o.price)) return i.opts.flatMap((o) => { const p = parsePrice(o.price); return p == null ? [] : [{ key: `${i.id}:${o.k}`, name: i.name, label: `${o.k} ${o.de}`, price: p }]; });
+  if (i.prices) return i.prices.flatMap(([u, pr]) => { const p = parsePrice(pr); return p == null ? [] : [{ key: `${i.id}:${u}`, name: i.name, label: u, price: p }]; });
+  if (i.price) { const p = parsePrice(i.price); return p == null ? [] : [{ key: i.id, name: i.name, price: p }]; }
+  if (choices) return choices.flatMap((o) => { const p = parsePrice(o.price); return p == null ? [] : [{ key: `${i.id}:${o.k}`, name: i.name, label: `${o.k} ${o.de}`, price: p }]; });
+  return [];
+}
+
+function Qty({ v, vi }: { v: Var; vi: boolean }) {
+  const lines = useCart();
+  const q = lines.find((l) => l.key === v.key)?.qty ?? 0;
+  const line = { key: v.key, name: v.name, label: v.label, price: v.price };
+  if (!q) return <button type="button" className="qty-add" onClick={() => change(line, 1)} aria-label={`${vi ? "Thêm" : "Hinzufügen"}: ${v.name}`}>+</button>;
+  return (
+    <span className="qty">
+      <button type="button" onClick={() => change(line, -1)} aria-label="−">−</button>
+      <span>{q}</span>
+      <button type="button" onClick={() => change(line, 1)} aria-label="+">+</button>
+    </span>
+  );
+}
+
+function OptRow({ o, lang, cart }: { o: Opt; lang: L; cart?: { id: string; name: string } }) {
   const main = lang === "vi" && o.en ? o.en : o.de;
+  const p = cart ? parsePrice(o.price) : null;
   const alt = lang === "de" && o.en && o.en !== o.de ? o.en : "";
   return (
     <li>
       <b className="ms-k">{o.k}</b>
       <span className="ms-on">{main}{o.a && <sup>{o.a}</sup>}{alt && <em> / {alt}</em>}</span>
       {o.price && <><i className="ms-lead" /><span className="ms-pr"><b>{o.price}</b></span></>}
+      {cart && p != null && <Qty vi={lang === "vi"} v={{ key: `${cart.id}:${o.k}`, name: cart.name, label: `${o.k} ${o.de}`, price: p }} />}
     </li>
   );
 }
@@ -53,6 +82,9 @@ function Row({ i, lang, u, tag, choices }: { i: Item; lang: L; u: (typeof U)["de
   const ch = !i.opts && !i.price && !i.prices ? choices : undefined;
   const from = ch ? Math.min(...ch.map((o) => parseFloat(o.price))).toFixed(2) + " €" : undefined;
   const hasOptPrice = i.opts?.some((o) => o.price);
+  const vs = variants(i, ch);
+  const single = vs.length === 1 && !i.opts;
+  const multi = vs.length > 1 && !i.opts;
   const cls = `ms-i${i.veg ? " veg" : ""}${i.hot ? " hot" : ""}${i.opts ? " has-o" : ""}`;
   const vegL = vi ? "Món chay" : "Vegetarisch";
   const hotL = vi ? "Món cay" : "Scharf";
@@ -68,10 +100,16 @@ function Row({ i, lang, u, tag, choices }: { i: Item; lang: L; u: (typeof U)["de
           {i.hot && <Chili label={hotL} />}
           {!i.opts && (i.price || i.prices || ch) && <i className="ms-lead" />}
           {ch ? <span className="ms-pr"><small className="ms-from">{u.from}</small><b>{from}</b></span> : !i.opts && <Pr i={i} />}
+          {single && <Qty v={vs[0]} vi={vi} />}
         </div>
         {d && <p className="ms-d">{d}</p>}
         {d2 && <p className="ms-e">{d2}</p>}
-        {i.opts && <ul className="ms-o" aria-label={u.opts}>{i.opts.map((o) => <OptRow key={o.k} o={o} lang={lang} />)}</ul>}
+        {multi && (
+          <ul className="ms-vars">
+            {vs.map((v) => <li key={v.key}><span>{v.label}</span><b>{eur(v.price)}</b><Qty v={v} vi={vi} /></li>)}
+          </ul>
+        )}
+        {i.opts && <ul className="ms-o" aria-label={u.opts}>{i.opts.map((o) => <OptRow key={o.k} o={o} lang={lang} cart={{ id: i.id, name: i.name }} />)}</ul>}
         {i.opts && !hasOptPrice && !ch && <p className="ms-req">{u.onRequest}</p>}
         {!i.opts && !i.price && !i.prices && !ch && <p className="ms-req">{u.onRequest}</p>}
       </div>
@@ -171,6 +209,7 @@ export default function MenuPage() {
         </div>
       </div>
       <p className="mv-legend">{u.legend}</p>
+      <CartBar lang={lang} />
     </Frame>
   );
 }

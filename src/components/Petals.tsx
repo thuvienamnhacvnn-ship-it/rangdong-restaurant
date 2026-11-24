@@ -5,10 +5,11 @@ import { useEffect, useRef } from "react";
 type P = { x: number; y: number; s: number; vy: number; ph: number; fl: number; fs: number; rot: number; vr: number; sp: number; tint: number; life: number; max: number };
 
 function sprite(c0: string, c1: string, c2: string) {
-  const w = 64, h = 64, cv = document.createElement("canvas");
+  const w = 128, h = 128, cv = document.createElement("canvas");
   cv.width = w; cv.height = h;
   const g = cv.getContext("2d")!;
   g.translate(w / 2, h / 2);
+  g.scale(2, 2);
   g.beginPath();
   g.moveTo(0, 26);
   g.bezierCurveTo(-26, 14, -22, -18, -7, -26);
@@ -78,7 +79,7 @@ export default function Petals() {
         ctx.rotate(p.rot + Math.sin(p.ph) * .5);
         ctx.scale(Math.max(.18, Math.abs(Math.cos(p.fl))) * p.s * .55 + .12 * p.s, p.s * .55 * (.85 + .15 * Math.sin(p.fl * .7)));
         ctx.globalAlpha = .9 * fade;
-        ctx.drawImage(sprites[p.tint], -32, -32);
+        ctx.drawImage(sprites[p.tint], -32, -32, 64, 64);
         ctx.restore();
       }
       raf = requestAnimationFrame(frame);

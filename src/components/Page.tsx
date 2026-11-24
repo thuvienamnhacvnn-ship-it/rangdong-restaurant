@@ -10,7 +10,7 @@ export function BottomNote() {
       <span>RẠNG ĐÔNG &nbsp; · &nbsp; {SITE.street.toUpperCase()}, {SITE.city.toUpperCase()}</span>
       <span className="links">
         <Link href="/party-technik">{t.common.more[0]}</Link>
-        <Link href="/food-guide">{t.common.more[1]}</Link>
+        <Link href="/tu-van">{t.common.more[1]}</Link>
         <Link href="/impressum">{t.common.legal[0]}</Link>
         <Link href="/datenschutz">{t.common.legal[1]}</Link>
       </span>

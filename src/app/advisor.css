@@ -43,7 +43,7 @@
   .adv-chef{width:auto;flex-direction:row;justify-content:flex-start;align-self:auto;gap:10px;padding:0 4px}
   .adv-chef img{width:64px;height:64px;max-height:none;border-radius:50%;object-fit:cover;object-position:50% 12%;background:radial-gradient(#5a3a22,#24140d);border:2px solid #c8964b;transform-origin:50% 50%}
   .adv-chef b{text-align:left;font-size:11px}
-  .adv-log{height:calc(100dvh - 500px)!important;min-height:200px!important}
+  .adv-log{flex:none!important;height:calc(100dvh - 500px)!important;min-height:200px!important;max-height:none!important}
 }
 
 .adv-hero{position:relative;flex:1;min-height:140px;border-radius:14px;overflow:hidden;border:1px solid rgba(214,168,92,.7);background:#120a07}
