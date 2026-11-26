@@ -8,6 +8,7 @@ const nextConfig = {
   async redirects() {
     return [
       { source: "/video", destination: "/tu-van", permanent: false },
+      { source: "/menu.pdf", destination: "/speisekarte", permanent: false },
       { source: "/food-guide", destination: "/tu-van", permanent: false },
     ];
   },
