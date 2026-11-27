@@ -3,7 +3,7 @@ const nextConfig = {
   allowedDevOrigins: ["127.0.0.1", "localhost"],
   reactStrictMode: true,
   async rewrites() {
-    return { beforeFiles: [{ source: "/speisekarte", destination: "/menu-a4/index.html" }] };
+    return { beforeFiles: [{ source: "/speisekarte", destination: "/menu-a4/index.html" }, { source: "/menu-en", destination: "/menu-en/index.html" }] };
   },
   async redirects() {
     return [
